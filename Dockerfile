@@ -10,7 +10,7 @@ WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libtiff5-dev libjpeg62-turbo-dev zlib1g-dev libfreetype6-dev \
+    libtiff-dev libjpeg-dev zlib1g-dev libfreetype6-dev \
     liblcms2-dev libopenjp2-7 libtiff5 \
     && rm -rf /var/lib/apt/lists/*  
 
