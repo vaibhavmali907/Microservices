@@ -39,8 +39,8 @@ def count_images_per_class(data_dir, class_mapping=None):
 
 def check_image_format(image_dir):
     num_files = 0
-    num_corrupted = 0
-    corrupted_images = []
+    num_incorrect_format = 0
+    incorrect_format_images = []
     class_mapping = {}
 
     # Check if there's a CSV file present in the directory
@@ -77,19 +77,19 @@ def check_image_format(image_dir):
                     img.close()
                 except Exception as e:
                     print(f"Error reading {filename}: {e}")
-                    num_corrupted += 1
-                    corrupted_images.append(filename)
+                    num_incorrect_format += 1
+                    incorrect_format_images.append(filename)
             else:
                 print(f"{filename}: Format error - Not a JPG, JPEG, PNG, BMP, TIFF, or GIF")
-                num_corrupted += 1
-                corrupted_images.append(filename)
+                num_incorrect_format += 1
+                incorrect_format_images.append(filename)
 
-    if num_corrupted == 0:
+    if num_incorrect_format == 0:
         image_format_message = f"All {num_files} images are in the correct format."
     else:
-        image_format_message = f"{num_corrupted} out of {num_files} images are corrupted or in the wrong format."
+        image_format_message = f"{num_incorrect_format} out of {num_files} images are in incorrect format."
 
-    return image_format_message, count_classes(image_dir, class_mapping), count_images_per_class(image_dir, class_mapping), corrupted_images, class_mapping
+    return image_format_message, count_classes(image_dir, class_mapping), count_images_per_class(image_dir, class_mapping), incorrect_format_images, class_mapping
 
 @app.get("/")
 def home():
@@ -100,10 +100,10 @@ def analyze(image_dir: ImageDir):
     if not os.path.exists(image_dir.image_dir):
         raise HTTPException(status_code=404, detail="Directory not found")
 
-    image_format_message, classes_count, images_per_class, corrupted_images, class_mapping = check_image_format(image_dir.image_dir)
+    image_format_message, classes_count, images_per_class, incorrect_format_images, class_mapping = check_image_format(image_dir.image_dir)
     return {
         "image_format_message": image_format_message,
-        "corrupted_images": corrupted_images,
+        "incorrect_format_images": incorrect_format_images,
         "classes_count": {"Number of classes": classes_count},
         "images_per_class": images_per_class
     }
