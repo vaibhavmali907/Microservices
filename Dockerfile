@@ -22,7 +22,7 @@ RUN pip install -r requirements.txt
 COPY . /app
 
 # Expose the port that the FastAPI application will run on
-EXPOSE 8000
+EXPOSE 80
 
 # Command to run the FastAPI application with uvicorn
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "80"]
